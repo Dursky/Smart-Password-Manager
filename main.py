@@ -1,6 +1,6 @@
 import sqlite3 as sl
 
-con  = sl.connect("my-test.db")#create new when not exist 
+con  = sl.connect("databases/passwords.db")#create new when not exist 
 cur = con.cursor()
 
 #main menu show
