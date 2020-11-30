@@ -1,5 +1,5 @@
 import sqlite3 as sl
-
+from time import sleep
 con  = sl.connect("databases/passwords.db")#create new when not exist 
 cur = con.cursor()
 
@@ -13,23 +13,22 @@ def main_menu():
     choose =int(input("=======================\n"))
     if(choose == 1):
         show_data()
-        chose_a = int(input("Go to menu ?\n1 - Yes\n2 - No\n"))
-        if(chose_a ==1):
-            main_menu()
-        if(chose_a==2):
-           exit_program()
+        sleep(0.5)
+        main_menu()
     if(choose == 2 ):
         name = str(input("Type a name:\n"))
         password = str(input("Type a password:\n"))
-        insert_data(name,password)
+        email = str(input("Type a email:\n"))
+        insert_data(name,password,email)
+        main_menu()
     if(choose == 3):
         exit_program()
 
 
 #function for insert data
-def insert_data(name,password):
-    sql = 'INSERT INTO PASSWORDS (name,pass) VALUES (?, ?)'
-    data =[(name,password)]
+def insert_data(name,password,email):
+    sql = 'INSERT INTO PASSWORDS (name,pass,email) VALUES (?, ?,?)'
+    data =[(name,password,email)]
     with con:
             con.executemany(sql,data)
 #function for exit_program
@@ -47,19 +46,20 @@ def show_data():
         #Don't call fetchone() or fetchall()
         data = con.execute('SELECT * FROM PASSWORDS')
         for row in data:
-            print(row)
+            print("[|Nr:",row[0],"| Name:",row[1],"| Password: ",row[2],"| E-mail: ",row[3],"|]")
             jump_count = jump_count + 1 
             if(len(jump_list) == jump_count):
                 break
         else:
             create = int(input("What you want to do?\n1 - Create\n2 - Return to menu\n"))
             if(create == 1):
-                print("Type a name and password for service:\n")
+                print("Type a name, password and e-mail for service:\n")
                 name = input("Name: ")
                 password = input("Password: ")
+                email = input("E-mail: ")
                 sure = int(input("Are you sure?\n1 - Yes\n2 - No\n"))
                 if(sure == 1):
-                    insert_data(name,password)
+                    insert_data(name,password,email)
                     print("Sucess!")
                     main_menu()
                 if(sure == 2):
